@@ -1,0 +1,130 @@
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en-IN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Univers — Logo Demo</title>
+	<style>
+		:root{--bg:#ffffff;--ui:#f6f7f9}
+		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:var(--bg);font-family:Google Sans,Arial,sans-serif}
+		.container{display:flex;flex-direction:column;align-items:center;gap:28px}
+		.logo-wrap{display:flex;align-items:center;gap:18px}
+		.logo-wrap svg{display:block}
+		/* bounce animation */
+		@keyframes univers-bounce {
+			0%{transform: translateY(0) scale(1)}
+			20%{transform: translateY(-12px) scale(1.03)}
+			40%{transform: translateY(0) scale(1)}
+			60%{transform: translateY(-6px) scale(1.015)}
+			80%{transform: translateY(0) scale(1)}
+			100%{transform: translateY(0) scale(1)}
+		}
+		#universLogo{
+			transform-origin: 50% 50%;
+			will-change: transform;
+			animation: univers-bounce 1.8s cubic-bezier(.2,.8,.2,1) infinite;
+			cursor:default;
+		}
+		/* pause animation when user hovers or focuses the logo */
+		.logo-wrap:hover #universLogo,
+		.logo-wrap:focus-within #universLogo{
+			animation-play-state: paused;
+		}
+		.brand{font-size:32px;font-weight:500;color:var(--brand,#1cdae0)}
+		/* search */
+		.search-box{display:flex;flex-direction:column;gap:8px;width:360px}
+		.search-field{display:flex;border-radius:12px;padding:10px 12px;background:var(--ui);align-items:center;gap:8px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+		.search-field input{flex:1;border:0;background:transparent;font-size:16px;outline:none}
+		.search-field button{border:0;background:#1cdae0;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+		.hint{font-size:13px;color:#666}
+		.output{min-height:28px;padding:8px 12px;border-radius:8px;background:#f8f9fb;border:1px solid #eee;width:360px;text-align:center;color:#111}
+		/* small responsive tweak */
+		@media (max-width:420px){.search-box,.output{width:92vw}}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="logo-wrap" role="img" aria-label="Univers">
+			<!-- SVG logo: we'll animate the gradient colors via JS -->
+			<svg id="universLogo" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+				<title>Univers symbol</title>
+				<defs>
+					<linearGradient id="uGrad" x1="0" x2="1" y1="0" y2="1">
+						<stop id="g0" offset="0" stop-color="#4a90e2"/>
+						<stop id="g1" offset="1" stop-color="#2a6fb8"/>
+					</linearGradient>
+				</defs>
+				<circle cx="34" cy="34" r="30" fill="url(#uGrad)"/>
+				<path d="M18 38c6-8 18-8 24 0" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round" transform="translate(0,-2)"/>
+				<ellipse cx="32" cy="24" rx="18" ry="6" fill="rgba(255,255,255,0.14)" transform="rotate(-20 32 24)"/>
+			</svg>
+			<div class="brand">Univers</div>
+		</div>
+
+		<div class="search-box">
+			<div class="search-field" role="search">
+				<input id="searchInput" type="search" placeholder="Search..." aria-label="Search input">
+				<button id="searchBtn" aria-label="Submit search">Go</button>
+			</div>
+			<div class="hint">Type to see the live input appear below. Press Enter or click Go to submit.</div>
+		</div>
+
+		<div id="output" class="output" aria-live="polite">Your search will appear here.</div>
+	</div>
+
+	<script>
+		// Color-changing logo: cycle gradient stops through an array of color pairs
+		(function(){
+			const colors = [
+				['#4a90e2','#2a6fb8'],
+				['#1cdae0','#0aa0c2'],
+				['#f76b1c','#ff9a5a'],
+				['#9b59b6','#6c4fb2'],
+				['#2ecc71','#27ae60']
+			];
+			let idx = 0;
+			const stop0 = document.getElementById('g0');
+			const stop1 = document.getElementById('g1');
+			function tick(){
+				const pair = colors[idx % colors.length];
+				stop0.setAttribute('stop-color', pair[0]);
+				stop1.setAttribute('stop-color', pair[1]);
+				// also update brand color CSS variable for subtle sync
+				document.documentElement.style.setProperty('--brand', pair[0]);
+				idx++;
+			}
+			// initial
+			tick();
+			// change every 1.2 seconds
+			setInterval(tick, 1200);
+		})();
+
+		// Search input wiring: show live typed value and handle submit
+		(function(){
+			const input = document.getElementById('searchInput');
+			const btn = document.getElementById('searchBtn');
+			const output = document.getElementById('output');
+
+			// live display
+			input.addEventListener('input', (e)=>{
+				const v = e.target.value.trim();
+				output.textContent = v ? `Live: "${v}"` : 'Your search will appear here.';
+			});
+
+			function submit(){
+				const v = input.value.trim();
+				if(!v){
+					output.textContent = 'Please enter a search query.';
+					input.focus();
+					return;
+				}
+				// simple feedback — in a real app you'd run the search
+				output.textContent = `Submitted: "${v}"`;
+			}
+
+			btn.addEventListener('click', submit);
+			input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submit(); });
+		})();
+	</script>
+</body>
+</html>
