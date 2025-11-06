@@ -6,59 +6,149 @@
 	<title>Univers — Logo Demo</title>
 	<style>
 		:root{--bg:#ffffff;--ui:#f6f7f9}
-		body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:var(--bg);font-family:Google Sans,Arial,sans-serif}
+		body{
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			height:100vh;
+			margin:0;
+			background: url("image-8.png") no-repeat center center fixed;
+			background-size: cover;
+			font-family:Google Sans,Arial,sans-serif;
+			color: white;
+		}
 		.container{display:flex;flex-direction:column;align-items:center;gap:28px}
 		.logo-wrap{display:flex;align-items:center;gap:18px}
 		.logo-wrap svg{display:block}
-		/* bounce animation */
-		@keyframes univers-bounce {
-			0%{transform: translateY(0) scale(1)}
-			20%{transform: translateY(-12px) scale(1.03)}
-			40%{transform: translateY(0) scale(1)}
-			60%{transform: translateY(-6px) scale(1.015)}
-			80%{transform: translateY(0) scale(1)}
-			100%{transform: translateY(0) scale(1)}
+		/* Particle animations */
+		@keyframes particle-movement {
+			0% { transform: translate(var(--start-x), var(--start-y)) scale(0); opacity: 0; }
+			50% { opacity: 1; }
+			100% { transform: translate(var(--end-x), var(--end-y)) scale(1); opacity: 1; }
 		}
-		#universLogo{
+		
+		@keyframes burst-particle {
+			0% { transform: translate(0, 0) scale(1); opacity: 1; }
+			50% { transform: translate(calc(var(--burst-x) * 0.5), calc(var(--burst-y) * 0.5)) scale(1.5); opacity: 0.8; }
+			100% { transform: translate(var(--burst-x), var(--burst-y)) scale(0.5); opacity: 0; }
+		}
+		
+		@keyframes glow {
+			0% { filter: drop-shadow(0 0 4px rgba(0,255,255,0.4)); }
+			50% { filter: drop-shadow(0 0 12px rgba(0,255,255,0.7)); }
+			100% { filter: drop-shadow(0 0 4px rgba(0,255,255,0.4)); }
+		}
+
+		.particle {
+			animation: particle-movement 2s cubic-bezier(.4,0,.2,1) forwards;
+		}
+		
+		.burst-particle {
+			animation: burst-particle 1.5s ease-out infinite;
+			transform-origin: center;
+		}
+
+		#universLogo {
 			transform-origin: 50% 50%;
-			will-change: transform;
-			animation: univers-bounce 1.8s cubic-bezier(.2,.8,.2,1) infinite;
-			cursor:default;
+			cursor: default;
+			animation: glow 3s ease-in-out infinite;
 		}
-		/* pause animation when user hovers or focuses the logo */
-		.logo-wrap:hover #universLogo,
-		.logo-wrap:focus-within #universLogo{
-			animation-play-state: paused;
+
+		/* Hover effect */
+		.logo-wrap:hover #universLogo {
+			filter: drop-shadow(0 0 12px rgba(0,255,255,0.8));
 		}
 		.brand{font-size:32px;font-weight:500;color:var(--brand,#1cdae0)}
 		/* search */
 		.search-box{display:flex;flex-direction:column;gap:8px;width:360px}
-		.search-field{display:flex;border-radius:12px;padding:10px 12px;background:var(--ui);align-items:center;gap:8px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+		.search-field{display:flex;border-radius:12px;padding:10px 12px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);align-items:center;gap:8px;box-shadow:0 6px 18px rgba(0,0,0,0.2)}
 		.search-field input{flex:1;border:0;background:transparent;font-size:16px;outline:none}
 		.search-field button{border:0;background:#1cdae0;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
-		.hint{font-size:13px;color:#666}
-		.output{min-height:28px;padding:8px 12px;border-radius:8px;background:#f8f9fb;border:1px solid #eee;width:360px;text-align:center;color:#111}
+		.hint{font-size:13px;color:rgba(255,255,255,0.7)}
+		.output{min-height:28px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);width:360px;text-align:center;color:white}
 		/* small responsive tweak */
 		@media (max-width:420px){.search-box,.output{width:92vw}}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<div class="logo-wrap" role="img" aria-label="Univers">
+		<div class="logo-wrap" role="img" aria-label="TECH UNIVERS">
 			<!-- SVG logo: we'll animate the gradient colors via JS -->
-			<svg id="universLogo" width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
-				<title>Univers symbol</title>
+			<svg id="universLogo" width="100" height="100" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="false">
+				<title>TECH UNIVERS</title>
 				<defs>
-					<linearGradient id="uGrad" x1="0" x2="1" y1="0" y2="1">
-						<stop id="g0" offset="0" stop-color="#4a90e2"/>
-						<stop id="g1" offset="1" stop-color="#2a6fb8"/>
+					<linearGradient id="techGrad" x1="0" x2="1" y1="0" y2="1">
+						<stop id="g0" offset="0" stop-color="#00fff2"/>
+						<stop id="g1" offset="1" stop-color="#0066ff"/>
 					</linearGradient>
+					<filter id="glow">
+						<feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+						<feMerge>
+							<feMergeNode in="coloredBlur"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
 				</defs>
-				<circle cx="34" cy="34" r="30" fill="url(#uGrad)"/>
-				<path d="M18 38c6-8 18-8 24 0" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round" transform="translate(0,-2)"/>
-				<ellipse cx="32" cy="24" rx="18" ry="6" fill="rgba(255,255,255,0.14)" transform="rotate(-20 32 24)"/>
+				
+				<!-- Bursting Light Particles -->
+				<!-- First Layer -->
+				<circle class="burst-particle" cx="60" cy="60" r="3" fill="#00fff2" style="--burst-x: 80px; --burst-y: -80px; animation-delay: 0s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="3" fill="#00fff2" style="--burst-x: 80px; --burst-y: 80px; animation-delay: 0.2s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="3" fill="#0066ff" style="--burst-x: -80px; --burst-y: -80px; animation-delay: 0.4s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="3" fill="#0066ff" style="--burst-x: -80px; --burst-y: 80px; animation-delay: 0.6s"/>
+				
+				<!-- Second Layer -->
+				<circle class="burst-particle" cx="60" cy="60" r="2.5" fill="#00fff2" style="--burst-x: 90px; --burst-y: 0px; animation-delay: 0.1s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2.5" fill="#0066ff" style="--burst-x: -90px; --burst-y: 0px; animation-delay: 0.3s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2.5" fill="#00fff2" style="--burst-x: 0px; --burst-y: 90px; animation-delay: 0.5s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2.5" fill="#0066ff" style="--burst-x: 0px; --burst-y: -90px; animation-delay: 0.7s"/>
+				
+				<!-- Third Layer (Additional Particles) -->
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#00fff2" style="--burst-x: 70px; --burst-y: -40px; animation-delay: 0.15s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#0066ff" style="--burst-x: -70px; --burst-y: 40px; animation-delay: 0.35s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#00fff2" style="--burst-x: 40px; --burst-y: 70px; animation-delay: 0.55s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#0066ff" style="--burst-x: -40px; --burst-y: -70px; animation-delay: 0.75s"/>
+				
+				<!-- Fourth Layer (Quick Bursts) -->
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#00fff2" style="--burst-x: 60px; --burst-y: -60px; animation-delay: 0.25s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#0066ff" style="--burst-x: -60px; --burst-y: 60px; animation-delay: 0.45s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#00fff2" style="--burst-x: 60px; --burst-y: 60px; animation-delay: 0.65s"/>
+				<circle class="burst-particle" cx="60" cy="60" r="2" fill="#0066ff" style="--burst-x: -60px; --burst-y: -60px; animation-delay: 0.85s"/>
+				
+				<!-- Orbiting Particles -->
+				<circle class="particle" cx="60" cy="60" r="2" fill="#00fff2" style="--start-x: -40px; --start-y: 20px; --end-x: 0; --end-y: 0; animation-delay: 0s"/>
+				<circle class="particle" cx="60" cy="60" r="2" fill="#00fff2" style="--start-x: 40px; --start-y: -20px; --end-x: 0; --end-y: 0; animation-delay: 0.3s"/>
+				<circle class="particle" cx="60" cy="60" r="2" fill="#0066ff" style="--start-x: 20px; --start-y: 40px; --end-x: 0; --end-y: 0; animation-delay: 0.6s"/>
+				<circle class="particle" cx="60" cy="60" r="2" fill="#0066ff" style="--start-x: -20px; --start-y: -40px; --end-x: 0; --end-y: 0; animation-delay: 0.9s"/>
+				
+				<!-- Main Logo -->
+				<g transform="translate(10,10)" filter="url(#glow)">
+					<!-- Outer Tech Ring -->
+					<path d="M50 0 A50 50 0 1 0 50 100 A50 50 0 1 0 50 0" 
+						  fill="none" stroke="url(#techGrad)" stroke-width="2"/>
+					
+					<!-- Inner Circuit Hexagon -->
+					<path d="M50 20 L70 35 L70 65 L50 80 L30 65 L30 35 Z" 
+						  fill="url(#techGrad)" fill-opacity="0.3" stroke="url(#techGrad)" stroke-width="2"/>
+					
+					<!-- Connection Lines -->
+					<path d="M50 20 L50 80 M30 50 L70 50" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+					
+					<!-- Connection Nodes -->
+					<circle cx="50" cy="20" r="3" fill="#fff"/>
+					<circle cx="70" cy="35" r="3" fill="#fff"/>
+					<circle cx="70" cy="65" r="3" fill="#fff"/>
+					<circle cx="50" cy="80" r="3" fill="#fff"/>
+					<circle cx="30" cy="65" r="3" fill="#fff"/>
+					<circle cx="30" cy="35" r="3" fill="#fff"/>
+					<circle cx="50" cy="50" r="5" fill="url(#techGrad)"/>
+					
+					<!-- Central Tech Symbol -->
+					<path d="M45 45 L55 45 L55 55 L45 55 Z" fill="url(#techGrad)" stroke="#fff" stroke-width="1"/>
+					<circle cx="50" cy="50" r="8" fill="none" stroke="url(#techGrad)" stroke-width="1"/>
+				</g>
 			</svg>
-			<div class="brand">Univers</div>
+			<div class="brand">TECH UNIVERS</div>
 		</div>
 
 		<div class="search-box">
